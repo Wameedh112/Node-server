@@ -6,10 +6,38 @@ const cors = require("cors");
 const {connection } = require("./Connection");
 const fs = require("fs");
 const uuidv4 = require('uuid/v4');
+const compression = require('compression');
+const helmet = require('helmet');
+const{SHA256,AES} =require("crypto-js");
+
 
 server.listen(PORT, ()=>{
     console.log(`Server is running on Localhost:${PORT}`);
  });
+ server.use(compression());
+ server.use(helmet());
+ server.get("/",(request, response)=>{
+     response.send("on the master branch");
+ });
+ server.get("/registration/:username/:password",(request, response)=> {
+    const{ username, password:stupidPassword } = request.params;
+    //const stupidPassword= "wameedh112";
+    const hasedpassword = SHA256(stupidPassword).toString();
+    const salt = uuidv4();
+    const encrytpassword = AES.encrypt(hasedpassword,salt).toString();
+    const sql ="insert into user set ?"
+    const values ={
+        username,
+        password: encrytpassword,
+        salt
+    }
+    connection.query(sql, values,(error, result)=>{
+        if(error) showError(error, response);
+        else{
+            response.json({status: "success" , message : "registered"})
+        }
+    })
+ })
  server.use(express.static('public'));
  server.use(bodyParser.json());
  server.use(
@@ -17,6 +45,7 @@ server.listen(PORT, ()=>{
          oringin:"http://localhost:3000"
         })
     );
+    
 server.get("/get/jokes", (request ,response) => {
     connection.query("SELECT * FROM joke order by id desc ", (error , results) => {
         if (error){
