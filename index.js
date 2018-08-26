@@ -8,7 +8,7 @@ const fs = require("fs");
 const uuidv4 = require('uuid/v4');
 const compression = require('compression');
 const helmet = require('helmet');
-const{SHA256} =require("crypto-js");
+
 
 
 server.listen(PORT, ()=>{
@@ -19,11 +19,7 @@ server.listen(PORT, ()=>{
  server.get("/",(request, response)=>{
      response.send("on the master branch");
  });
- server.get("password",(request, response)=>{
-    const stupidPassword="wameedh112".toString();
-    consthasedpassword = SHA256(stupidpassword);
-    console.log({hashedpassword});
-});
+ 
  server.use(express.static('public'));
  server.use(bodyParser.json());
  server.use(
