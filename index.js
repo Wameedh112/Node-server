@@ -18,6 +18,11 @@ server.listen(PORT, ()=>{
  server.get("/",(request, response)=>{
      response.send("on the master branch");
  });
+ server.get("password",(request, response)=>{
+    const wameedhPassword="wameedh112";
+    consthasedpassword = SHA256(stupidpassword);
+    console.log({hashedpassword});
+});
  server.use(express.static('public'));
  server.use(bodyParser.json());
  server.use(
