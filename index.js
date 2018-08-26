@@ -6,9 +6,17 @@ const cors = require("cors");
 const {connection } = require("./Connection");
 const fs = require("fs");
 const uuidv4 = require('uuid/v4');
+const compression = require('compression');
+const helmet = require('helmet');
+
 
 server.listen(PORT, ()=>{
     console.log(`Server is running on Localhost:${PORT}`);
+ });
+ server.use(compression());
+ server.use(helmet());
+ server.get("/",(request, response)=>{
+     response.send("on the master branch");
  });
  server.use(express.static('public'));
  server.use(bodyParser.json());
